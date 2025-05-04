@@ -1,0 +1,99 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quiz Interactif</title>
+</head>
+<body>
+
+<h1>Quiz Interactif</h1>
+
+<div id="quiz">
+    <p id="question"></p>
+
+    <form id="quizForm">
+        <input type="radio" name="option" value="0"> <span id="opt0"></span><br>
+        <input type="radio" name="option" value="1"> <span id="opt1"></span><br>
+        <input type="radio" name="option" value="2"> <span id="opt2"></span><br>
+        <input type="radio" name="option" value="3"> <span id="opt3"></span><br><br>
+        <button type="button" onclick="submitAnswer()">Soumettre</button>
+    </form>
+
+    <p id="result"></p>
+</div>
+
+<script>
+const quizData = [
+    {
+        question: "Quelle est la capitale de la France ?",
+        options: ["Madrid", "Berlin", "Paris", "Rome"],
+        answer: 2
+    },
+    {
+        question: "Combien de continents sur Terre ?",
+        options: ["5", "6", "7", "8"],
+        answer: 2
+    },
+    {
+        question: "Quelle est la plus grande planète ?",
+        options: ["Terre", "Jupiter", "Mars", "Vénus"],
+        answer: 1
+    }
+];
+
+let currentQuestion = 0;
+let score = 0;
+
+function loadQuestion() {
+    const q = quizData[currentQuestion];
+    document.getElementById("question").textContent = q.question;
+    document.getElementById("opt0").textContent = q.options[0];
+    document.getElementById("opt1").textContent = q.options[1];
+    document.getElementById("opt2").textContent = q.options[2];
+    document.getElementById("opt3").textContent = q.options[3];
+    document.getElementById("result").textContent = "";
+    const options = document.getElementsByName("option");
+    for (let opt of options) opt.checked = false;
+}
+
+function submitAnswer() {
+    const options = document.getElementsByName("option");
+    let selected = -1;
+    for (let i = 0; i < options.length; i++) {
+        if (options[i].checked) {
+            selected = parseInt(options[i].value);
+            break;
+        }
+    }
+
+    if (selected === -1) {
+        alert("Veuillez choisir une réponse !");
+        return;
+    }
+
+    if (selected === quizData[currentQuestion].answer) {
+        score++;
+        document.getElementById("result").textContent = "Bonne réponse !";
+    } else {
+        document.getElementById("result").textContent = "Mauvaise réponse.";
+    }
+
+    currentQuestion++;
+    if (currentQuestion < quizData.length) {
+        setTimeout(loadQuestion, 1000);
+    } else {
+        setTimeout(showFinalScore, 1000);
+    }
+}
+
+function showFinalScore() {
+    document.getElementById("quiz").innerHTML = 
+        "<h2>Quiz terminé !</h2>" +
+        "<p>Votre score : " + score + " sur " + quizData.length + "</p>";
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>
